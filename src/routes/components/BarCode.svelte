@@ -14,5 +14,17 @@
       JsBarcode(barcodeCanvas, data);
     });
   </script>
+  <div class="canvas-container">
+    <canvas bind:this={barcodeCanvas} ></canvas>
+  </div>
+  <style>
+    .canvas-container {
+      width: auto;
+      height: 100%;
+    }
   
-  <canvas bind:this={barcodeCanvas}></canvas>
+    .canvas-container canvas {
+      width: 100%;
+      height: 100%;
+    }
+  </style>

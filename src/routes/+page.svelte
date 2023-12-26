@@ -40,14 +40,14 @@
 		cardList = event.detail;
 	}
 </script>
-
+<div class="p-4"></div>
 <div class="print-container container is-fullheight p-2">
 	<div class="columns is-multiline">
 		<!-- for loop cardList -->
 		{#each cardList as item, index (item.memberNo)}
 			<div class="column is-4-desktop is-4-widescreen is-6-tablet is-12-mobile">
 				<div class="card">
-					<div class="card-image">
+					<div class="card-image columns">
 						<!-- <figure class="image">
 							<img
 								src="https://th.bing.com/th/id/R.89f6bc1850ad7db5dfbd9561d0707b48?rik=bw2skn0hX86eRQ&pid=ImgRaw&r=0"
@@ -60,17 +60,17 @@
 								alt="Placeholder image"
 							/>
 						</figure> -->
-						<figure class="image">
+						<figure class="column image">
 							<QRCode data={item.memberNo + ''} />
 						</figure>
-						<figure class="image">
+						<figure class="column image">
 							<Barcode data={item.memberNo + ''} />
 						</figure>
 					</div>
-					<div class="card-content">
+					<div class="card-content p-2">
 						<div class="media">
 							<div class="media-left">
-								<figure class="image is-48x48">
+								<figure class="image is-64x64">
 									<img src={item.logo} alt="Placeholder image" aria-hidden="true" />
 								</figure>
 							</div>
@@ -119,7 +119,12 @@
 <style>
 	.card {
 		position: relative;
-		/* Other styles */
+	}
+
+	.card:hover {
+		box-shadow:
+			0 14px 28px rgba(0, 0, 0, 0.25),
+			0 10px 10px rgba(0, 0, 0, 0.22);
 	}
 
 	.delete-button {
@@ -137,12 +142,13 @@
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
+		max-height: 150px;
 	}
-	.card-image figure {
+	/* .card-image figure {
 		margin: 0;
 		height: 80px;
 		width: auto;
-	}
+	} */
 	@media print {
 		.print-container {
 			width: 210mm;

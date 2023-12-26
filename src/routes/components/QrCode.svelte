@@ -15,4 +15,4 @@
   });
 </script>
 
-<img src={qrCodeUrl} alt="QR Code" />
+<img src={qrCodeUrl} alt="QR Code" style="height: 120px; width:auto;min-width:120px;"/>
