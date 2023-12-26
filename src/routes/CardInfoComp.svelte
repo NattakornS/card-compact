@@ -1,40 +1,40 @@
 <script lang="ts">
-		import type { CardInfo } from './model/card';
-    import { createEventDispatcher } from 'svelte';
+	import type { CardInfo } from './model/card';
+	import { createEventDispatcher } from 'svelte';
 
-const dispatch = createEventDispatcher();
+	const dispatch = createEventDispatcher();
 	export let cardInfo: CardInfo = {
-		 logo: '',
-		 memberNo: 0,
-		 memberName: '',
-		 description: '',
-		 name: ''
-	 };
+		logo: '',
+		memberNo: 0,
+		memberName: '',
+		description: '',
+		name: ''
+	};
 	export let showModal = false;
 
-  async function handleFileUpload(e) {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onloadend = function() {
-      cardInfo.logo = reader.result;
-      saveChanges();
-    }
-    reader.readAsDataURL(file);
-  }
+	async function handleFileUpload(e:any) {
+		const file = e.target.files[0];
+		const reader = new FileReader();
+		reader.onloadend = function () {
+			cardInfo.logo = reader.result;
+			saveChanges();
+		};
+		reader.readAsDataURL(file);
+	}
 
 	function saveChanges() {
-    let storedCardInfo = localStorage.getItem('cardInfo');
-    if (!storedCardInfo) {
-      storedCardInfo = "[]"
-    }
-      let cardInfos = JSON.parse(storedCardInfo);
-      cardInfos.push(cardInfo)
-      localStorage.setItem('cardInfo', JSON.stringify(cardInfos));
-      showModal = false;
-      dispatch('saveChanges', cardInfos);
-      dispatch('showModal', false);
+		let storedCardInfo = localStorage.getItem('cardInfo');
+		if (!storedCardInfo) {
+			storedCardInfo = '[]';
+		}
+		let cardInfos = JSON.parse(storedCardInfo);
+		cardInfos.push(cardInfo);
+		localStorage.setItem('cardInfo', JSON.stringify(cardInfos));
+		showModal = false;
+		dispatch('saveChanges', cardInfos);
+		dispatch('showModal', false);
 	}
-  function toggleModal() {
+	function toggleModal() {
 		showModal = !showModal;
 	}
 </script>
@@ -49,32 +49,47 @@ const dispatch = createEventDispatcher();
 		<section class="modal-card-body">
 			<!-- Card Information Form -->
 			<div class="field">
-				<label class="label">Card Number</label>
+				<label class="label" for="cardNumber">Card Number</label>
 				<div class="control">
-					<input class="input" type="text" placeholder="Card Number"   bind:value={cardInfo.memberNo} />
+					<input
+						class="input"
+						type="text"
+						placeholder="Card Number"
+						bind:value={cardInfo.memberNo}
+					/>
 				</div>
 			</div>
 			<!-- Add more fields as needed -->
 			<div class="field">
-				<label class="label">Card Name</label>
+				<label class="label" for="cardName">Card Name</label>
 				<div class="control">
-					<input class="input" type="text" placeholder="Card Name"  bind:value={cardInfo.name} />
+					<input class="input" type="text" placeholder="Card Name" bind:value={cardInfo.name} />
 				</div>
 			</div>
 			<div class="field">
-				<label class="label">DESC</label>
+				<label class="label" for="description">description</label>
 				<div class="control">
-					<input class="input" type="text" placeholder="Card Name"  bind:value={cardInfo.description} />
+					<input
+						class="input"
+						type="text"
+						placeholder="Card Name"
+						bind:value={cardInfo.description}
+					/>
 				</div>
 			</div>
 			<div class="field">
-				<label class="label">Member Name</label>
+				<label class="label" for="memberName">Member Name</label>
 				<div class="control">
-					<input class="input" type="text" placeholder="Card Name"  bind:value={cardInfo.memberName} />
+					<input
+						class="input"
+						type="text"
+						placeholder="Card Name"
+						bind:value={cardInfo.memberName}
+					/>
 				</div>
 			</div>
 			<div class="field">
-				<label class="label">Logo</label>
+				<label class="label" for="logo">Logo</label>
 				<div class="control">
 					<input
 						class="input"
@@ -91,4 +106,3 @@ const dispatch = createEventDispatcher();
 		</footer>
 	</div>
 </div>
-

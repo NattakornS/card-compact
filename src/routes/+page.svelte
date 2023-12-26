@@ -5,8 +5,8 @@
 	import Barcode from './components/BarCode.svelte';
 	import CardInfoComp from './CardInfoComp.svelte';
 	import { onMount } from 'svelte';
-	let cardList: Array<CardInfo> = []
-    //     [
+	let cardList: Array<CardInfo> = [];
+	//     [
 	// 	{
 	// 		name: 'Shell',
 	// 		description: 'Shell Member',
@@ -32,13 +32,13 @@
 			}
 		});
 	});
-	function deleteCard(index:number) {
+	function deleteCard(index: number) {
 		cardList.splice(index, 1);
 		localStorage.setItem('cardInfo', JSON.stringify(cardList));
 	}
-    function saveChanges(event:any) {
-        cardList =  event.detail;
-    }
+	function saveChanges(event: any) {
+		cardList = event.detail;
+	}
 </script>
 
 <div class="print-container container is-fullheight p-2">
@@ -61,17 +61,17 @@
 							/>
 						</figure> -->
 						<figure class="image">
-							<QRCode data={item.memberNo} />
+							<QRCode data={item.memberNo + ''} />
 						</figure>
 						<figure class="image">
-							<Barcode data={item.memberNo} />
+							<Barcode data={item.memberNo + ''} />
 						</figure>
 					</div>
 					<div class="card-content">
 						<div class="media">
 							<div class="media-left">
 								<figure class="image is-48x48">
-									<img src={item.logo} alt="Placeholder image" />
+									<img src={item.logo} alt="Placeholder image" aria-hidden="true" />
 								</figure>
 							</div>
 							<div class="media-content">
@@ -79,7 +79,10 @@
 								<p class="subtitle is-6">{item.memberName}</p>
 							</div>
 						</div>
-						<button class="button is-primary delete-button is-danger m-2" on:click={()=>deleteCard(index)}>
+						<button
+							class="button is-primary delete-button is-danger m-2"
+							on:click={() => deleteCard(index)}
+						>
 							<span class="icon is-small">
 								<i class="fas fa-trash"></i>
 							</span>
@@ -137,8 +140,6 @@
 	}
 	.card-image figure {
 		margin: 0;
-	}
-	.card-image img {
 		height: 80px;
 		width: auto;
 	}

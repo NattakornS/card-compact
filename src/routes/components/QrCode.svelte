@@ -8,7 +8,7 @@
 
   onMount(async () => {
     try {
-      qrCodeUrl = await QRCode.toDataURL(data+'');
+      qrCodeUrl = await QRCode.toDataURL(data);
     } catch (err) {
       console.error(err);
     }
