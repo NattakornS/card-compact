@@ -108,7 +108,7 @@
 		</span>
 		<span>Add</span>
 	</button>
-	<button class="button is-primary">
+	<button class="button is-primary" on:click={() => window.print()}>
 		<span class="icon is-small">
 			<i class="fas fa-print"></i>
 		</span>
