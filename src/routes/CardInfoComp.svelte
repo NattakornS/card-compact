@@ -10,6 +10,15 @@
 		description: '',
 		name: ''
 	};
+  $: if (!showModal) {
+    cardInfo = {
+		logo: '',
+		memberNo: 0,
+		memberName: '',
+		description: '',
+		name: ''
+	}
+  }
 	export let showModal = false;
 
 	async function handleFileUpload(e:any) {
