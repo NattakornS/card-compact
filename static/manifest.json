@@ -1,7 +1,7 @@
 {
     "short_name": "card-compact",
     "name": "Card Compact",
-    "start_url": "/",
+    "start_url": "/card-compact/",
     "icons": [
       {
         "src": "images/android/android-launchericon-512-512.png",
@@ -11,7 +11,7 @@
     ],
     "background_color": "#3367D6",
     "display": "standalone",
-    "scope": "/",
+    "scope": "/card-compact/",
     "theme_color": "#3367D6",
     "description": "member card pocket"
 }
