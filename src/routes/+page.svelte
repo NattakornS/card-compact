@@ -3,8 +3,31 @@
 	import type { CardInfo } from './model/card';
 	import QRCode from './components/QrCode.svelte';
 	import Barcode from './components/BarCode.svelte';
+	import AppInfo from './components/AppInfo.svelte';
 	import CardInfoComp from './CardInfoComp.svelte';
 	import { onMount } from 'svelte';
+	let lastScrollTop = 0;
+	let isScrollingDown = false;
+	let appInfo = false;
+	onMount(() => {
+		window.onscroll = function () {
+			let st = window.pageYOffset || document.documentElement.scrollTop;
+			if (st > lastScrollTop) {
+				isScrollingDown = true;
+			} else {
+				isScrollingDown = false;
+			}
+			lastScrollTop = st <= 0 ? 0 : st;
+		};
+	});
+	let selected: number | null = null;
+	let selectedCardInfo: CardInfo = {
+		logo: '',
+		memberNo: 0,
+		memberName: '',
+		description: '',
+		name: ''
+	};
 	let cardList: Array<CardInfo> = [];
 	//     [
 	// 	{
@@ -16,9 +39,13 @@
 	// 	},
 	// ];
 
-	let modelVis = false;
+	let modalVis = false;
 	function showModal() {
-		modelVis = true;
+		modalVis = true;
+	}
+	function addCard() {
+		setSelect(null);
+		modalVis = true;
 	}
 	onMount(() => {
 		const storedCardInfo = localStorage.getItem('cardInfo');
@@ -33,13 +60,50 @@
 		});
 	});
 	function deleteCard(index: number) {
-		cardList.splice(index, 1);
-		localStorage.setItem('cardInfo', JSON.stringify(cardList));
+		if (confirm('Are you sure you want to delete this card?')) {
+			// delete the card
+			let cardListTmp = [...cardList];
+			cardListTmp.splice(index, 1);
+			cardList = cardListTmp;
+			localStorage.setItem('cardInfo', JSON.stringify(cardListTmp));
+		}
 	}
 	function saveChanges(event: any) {
-		cardList = event.detail;
+		let storedCardInfo = localStorage.getItem('cardInfo');
+		if (!storedCardInfo) {
+			storedCardInfo = '[]';
+		}
+		let cardInfos = JSON.parse(storedCardInfo);
+		if (selected !== null) {
+			cardInfos[selected] = event.detail;
+		} else {
+			cardInfos.push(event.detail);
+		}
+		localStorage.setItem('cardInfo', JSON.stringify(cardInfos));
+
+		cardList = cardInfos;
+		modalVis = false;
+	}
+	function setSelect(index: number | null) {
+		selected = index;
+		if (index === null) {
+			selectedCardInfo = {
+				logo: '',
+				memberNo: 0,
+				memberName: '',
+				description: '',
+				name: ''
+			};
+		} else {
+			selectedCardInfo = cardList[index];
+		}
+	}
+	function editCard(index: number) {
+		setSelect(index);
+		showModal();
 	}
 </script>
+
 <div class="p-4"></div>
 <div class="print-container container is-fullheight p-2">
 	<div class="columns is-multiline">
@@ -79,14 +143,18 @@
 								<p class="subtitle is-6">{item.memberName}</p>
 							</div>
 						</div>
-						<button
-							class="button is-primary delete-button is-danger m-2"
-							on:click={() => deleteCard(index)}
-						>
-							<span class="icon is-small">
-								<i class="fas fa-trash"></i>
-							</span>
-						</button>
+						<footer class="card-footer">
+							<button class="button is-primary is-primary m-2" on:click={() => editCard(index)}>
+								<span class="icon is-small">
+									<i class="fas fa-edit"></i>
+								</span>
+							</button>
+							<button class="button is-primary is-danger m-2" on:click={() => deleteCard(index)}>
+								<span class="icon is-small">
+									<i class="fas fa-trash"></i>
+								</span>
+							</button>
+						</footer>
 						<!-- <div class="content">
 						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris. <a
 							>@bulmaio</a
@@ -101,20 +169,39 @@
 		{/each}
 	</div>
 </div>
-<div class="fab">
-	<button class="button is-primary" on:click={showModal}>
-		<span class="icon is-small">
+<div class={`fab ${isScrollingDown ? 'hide' : ''}`}>
+	<button class="button is-primary" on:click={addCard}>
+		<span class="icon">
 			<i class="fas fa-plus"></i>
 		</span>
-		<span>Add</span>
+		<!-- <span>Add</span> -->
 	</button>
-	<button class="button is-primary" on:click={() => window.print()}>
+	<button class="button is-light" on:click={() => window.print()}>
 		<span class="icon is-small">
 			<i class="fas fa-print"></i>
 		</span>
 	</button>
+	<button
+		class="button is-light"
+		on:click={() => {
+			appInfo = true;
+		}}
+	>
+		<span class="icon is-small">
+			<i class="fas fa-info"></i>
+		</span>
+	</button>
 </div>
-<CardInfoComp bind:showModal={modelVis} on:saveChanges={saveChanges}></CardInfoComp>
+<CardInfoComp bind:showModal={modalVis} on:saveChanges={saveChanges} cardInfo={selectedCardInfo}
+></CardInfoComp>
+
+<div class={`modal ${appInfo ? 'is-active' : ''}`}>
+	<div class="modal-background"></div>
+	<div class="modal-content">
+		<AppInfo></AppInfo>
+	</div>
+	<button class="modal-close is-large" aria-label="close" on:click={()=>{appInfo=false}}></button>
+</div>
 
 <style>
 	.card {
@@ -133,10 +220,14 @@
 		right: 0;
 	}
 	.fab {
+		transition: all 0.3s ease;
 		position: fixed;
 		bottom: 20px;
 		right: 20px;
 		z-index: 100;
+	}
+	.hide {
+		transform: translateY(100%);
 	}
 	.card-image {
 		display: flex;

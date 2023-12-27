@@ -10,18 +10,18 @@
 		description: '',
 		name: ''
 	};
-  $: if (!showModal) {
-    cardInfo = {
-		logo: '',
-		memberNo: 0,
-		memberName: '',
-		description: '',
-		name: ''
-	}
-  }
+	// $: if (!showModal) {
+	// 	cardInfo = {
+	// 		logo: '',
+	// 		memberNo: 0,
+	// 		memberName: '',
+	// 		description: '',
+	// 		name: ''
+	// 	};
+	// }
 	export let showModal = false;
 
-	async function handleFileUpload(e:any) {
+	async function handleFileUpload(e: any) {
 		const file = e.target.files[0];
 		const reader = new FileReader();
 		reader.onloadend = function () {
@@ -32,15 +32,8 @@
 	}
 
 	function saveChanges() {
-		let storedCardInfo = localStorage.getItem('cardInfo');
-		if (!storedCardInfo) {
-			storedCardInfo = '[]';
-		}
-		let cardInfos = JSON.parse(storedCardInfo);
-		cardInfos.push(cardInfo);
-		localStorage.setItem('cardInfo', JSON.stringify(cardInfos));
 		showModal = false;
-		dispatch('saveChanges', cardInfos);
+		dispatch('saveChanges', cardInfo);
 		dispatch('showModal', false);
 	}
 	function toggleModal() {
@@ -104,6 +97,7 @@
 						class="input"
 						type="file"
 						accept="image/*"
+						bind:value={cardInfo.logo}
 						on:change={(e) => handleFileUpload(e)}
 					/>
 				</div>
